@@ -1,0 +1,27 @@
+# Only the game itself goes to GitHub: index.html, help.html, css/, src/,
+# vendor/, docs/, serve.py, start.command, README.md.
+
+# Working folders (screenshots, scratch, files waiting to be deleted)
+Claude outputs/
+_to_delete/
+
+# Backups and temporary files
+*.bak
+*.orig
+*.tmp
+*.swp
+*~
+
+# OS clutter
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+
+# Editors and tools
+.vscode/
+.idea/
+node_modules/
+__pycache__/
+*.pyc
+.env

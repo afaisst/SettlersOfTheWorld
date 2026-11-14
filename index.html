@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Settlers of the World</title>
+  <link rel="stylesheet" href="./vendor/fonts/fredoka.css" />
+  <link rel="stylesheet" href="./css/game.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three/three.module.min.js",
+        "three/addons/": "./vendor/three/addons/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <canvas id="scene"></canvas>
+
+  <!-- ===================== START MENU ===================== -->
+  <div id="menu">
+    <div class="menu-card">
+      <h1 class="title" id="title" data-i18n>Settlers of the World</h1>
+      <p class="subtitle" data-i18n>Build towns, raise castles, rule the island!</p>
+      <div class="lang-switch seg" id="langSwitch" aria-label="Language"></div>
+
+      <section class="menu-section">
+        <div class="section-head">
+          <span class="section-title" data-i18n>Your world</span>
+          <span class="seed" id="mapSeed"></span>
+        </div>
+        <div class="world-opts">
+          <label data-i18n="Islands">Islands
+            <span class="stepper"><button type="button" id="islandsDown">−</button><b id="islandsVal">1</b><button type="button" id="islandsUp">+</button></span>
+          </label>
+          <label data-i18n="Size">Size
+            <span class="seg" id="islandSize">
+              <button type="button" data-size="small" data-i18n>Small</button><button type="button" data-size="medium" class="on" data-i18n>Medium</button><button type="button" data-size="large" data-i18n>Large</button>
+            </span>
+          </label>
+        </div>
+        <button class="btn btn-mint" id="shuffleMap"><span class="btn-icon" id="shuffleIcon"></span><span data-i18n>New world</span></button>
+      </section>
+
+      <section class="menu-section">
+        <div class="section-head">
+          <span class="section-title" data-i18n>Players</span>
+          <span class="hint" data-i18n>2 – 4 settlements</span>
+        </div>
+        <div id="playerList"></div>
+        <button class="btn btn-ghost" id="addPlayer" data-i18n>+ Add a settlement</button>
+        <div class="weather-opt">
+          <div class="weather-head"><span data-i18n>Bad weather</span><small id="weatherPct"></small></div>
+          <input type="range" id="weatherSlider" min="0" max="2" step="1" value="1" aria-label="Bad weather" data-i18n-aria />
+          <div id="weatherLabels"><span data-level="easy" data-i18n>Easy</span><span data-level="medium" data-i18n>Medium</span><span data-level="hard" data-i18n>Hard</span></div>
+        </div>
+        <div class="world-opts win-opt">
+          <label data-i18n="Points to win">Points to win
+            <span class="stepper"><button type="button" id="winDown">−</button><b id="winVal">10</b><button type="button" id="winUp">+</button></span>
+          </label>
+        </div>
+      </section>
+
+      <button class="btn btn-play" id="playBtn" data-i18n>Play!</button>
+      <button class="btn btn-sun" id="continueBtn" hidden>Continue saved game</button>
+      <a class="btn btn-ghost" id="helpBtn" href="./help.html"><span class="btn-icon"><svg viewBox="0 0 64 64" class="icon"><path d="M32 14 C24 8 12 8 6 12 V54 C12 50 24 50 32 56 C40 50 52 50 58 54 V12 C52 8 40 8 32 14 Z" fill="#fff8ec" stroke="#4a3628" stroke-width="3.5" stroke-linejoin="round"/><path d="M32 14 V56" stroke="#4a3628" stroke-width="3.5"/><path d="M12 22 h14 M12 30 h14 M38 22 h14 M38 30 h14" stroke="#ff7f66" stroke-width="3" stroke-linecap="round"/></svg></span><span data-i18n>How to play</span></a>
+
+      <div class="menu-foot">
+        <label data-i18n="Graphics">Graphics
+          <select id="menuQuality">
+            <option value="high" data-i18n>High</option>
+            <option value="balanced" data-i18n>Balanced</option>
+            <option value="fast" data-i18n>Fast</option>
+          </select>
+        </label>
+        <button class="btn btn-tiny btn-ghost" id="debugBtn" title="Start without fog of war and with 100 of every resource" data-i18n data-i18n-title>Debug game</button>
+        <a href="#" id="openWorkshop" data-i18n>Tile workshop</a>
+      </div>
+    </div>
+    <div class="menu-copy">© 2026 Andreas Faisst</div>
+  </div>
+
+  <!-- ===================== IN-GAME HUD ===================== -->
+  <div id="hud" hidden>
+    <div id="resCol">
+      <div class="hud-card" id="resources">
+        <div class="card-title"><span>Resources</span><button class="btn btn-tiny btn-ghost" id="allResBtn" title="Your goods on every island" data-i18n data-i18n-title>All islands</button></div>
+        <div id="resourceList" class="res-list"></div>
+        <div class="card-note"></div>
+      </div>
+      <div class="hud-card" id="islandRes" hidden>
+        <div class="card-title">Island</div>
+        <div class="res-list"></div>
+        <div class="card-note" data-i18n>The island you are looking at</div>
+      </div>
+    </div>
+    <div id="overlays"></div>
+
+    <div class="hud-card" id="build">
+      <div class="card-title" data-i18n>Build</div>
+      <div id="buildList"></div>
+      <div class="card-note" id="buildHint">Pick a piece, then click a glowing spot</div>
+    </div>
+
+    <div id="scoreboard"></div>
+
+    <div id="turnbar">
+      <div class="who" id="who"></div>
+      <button class="btn btn-sun" id="rollBtn"><span class="btn-icon" id="rollIcon"></span><span data-i18n>Roll dice</span></button>
+      <button class="btn btn-ghost" id="undoBtn" data-i18n>Undo</button>
+      <button class="btn btn-play" id="endTurnBtn" data-i18n>End turn</button>
+    </div>
+
+    <button class="btn btn-tiny" id="menuBtn" data-i18n>Menu</button>
+    <div id="minimap" title="Click or drag to move the view" data-i18n-title><canvas></canvas></div>
+    <div id="dice"></div>
+  </div>
+
+  <div id="splash"></div>
+  <div id="toast"></div>
+
+  <!-- ===================== TILE WORKSHOP (dev view) ===================== -->
+  <div id="panel" hidden>
+    <h1>Settlers of the World · Tiles</h1>
+    <label for="tileType">Tile type</label>
+    <select id="tileType"></select>
+    <label for="layout">Layout</label>
+    <select id="layout">
+      <option value="single">Single tile</option>
+      <option value="board">Full board (19 tiles)</option>
+      <option value="mixed">Full board — mixed tiles</option>
+      <option value="island">Island with sea (37 tiles)</option>
+      <option value="pieces">Pieces close-up (roads, towns, castles)</option>
+      <option value="island-pieces">Island with demo pieces</option>
+    </select>
+    <label for="wind">Wind</label>
+    <input id="wind" type="range" min="0" max="3" step="0.05" value="1" />
+    <label for="quality">Graphics quality</label>
+    <select id="quality">
+      <option value="high">High</option>
+      <option value="balanced">Balanced</option>
+      <option value="fast">Fast</option>
+    </select>
+    <div class="row"><input id="autorotate" type="checkbox" /><label for="autorotate" style="margin:0">Auto-rotate</label></div>
+    <button id="reseed">New random tiles</button>
+    <button id="backToMenu">← Back to menu</button>
+    <div id="help">Drag to move the board · Shift + drag to rotate · scroll / pinch to zoom</div>
+  </div>
+
+  <div id="loadError" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(20,14,9,.92);color:#f1e6d4;font:15px/1.5 system-ui,sans-serif;z-index:100;padding:24px;text-align:center"></div>
+  <script>
+    // ES modules can't load from file:// — show instructions instead of a silently broken page.
+    function showLoadError(html) {
+      const el = document.getElementById('loadError');
+      el.innerHTML = '<div style="max-width:520px">' + html + '</div>';
+      el.style.display = 'flex';
+    }
+    if (location.protocol === 'file:') {
+      showLoadError('<h2>Needs a local web server</h2><p>Browsers block JavaScript modules when a page is opened directly from disk.</p>' +
+        '<p>Double-click <b>start.command</b> in the game folder, or run<br><code>python3 serve.py 8000</code><br>in the folder and open <code>http://localhost:8000</code>.</p>');
+    }
+  </script>
+  <script type="module" src="./src/main.js" onerror="showLoadError('<h2>Could not load the game scripts</h2><p>Check the browser console for details.</p>')"></script>
+  <script type="module">
+    // If main.js or three.js failed to load, sotw never appears.
+    setTimeout(() => { if (!window.sotw && location.protocol !== 'file:') showLoadError('<h2>The game did not start</h2><p>Something went wrong while loading. Open the browser console (⌥⌘J) for errors.</p>'); }, 12000);
+  </script>
+</body>
+</html>

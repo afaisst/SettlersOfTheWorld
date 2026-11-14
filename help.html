@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How to play · Settlers of the World</title>
+  <link rel="stylesheet" href="./vendor/fonts/fredoka.css" />
+  <link rel="stylesheet" href="./css/game.css" />
+  <link rel="stylesheet" href="./css/help.css" />
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three/three.module.min.js",
+                   "three/addons/": "./vendor/three/addons/" } }
+  </script>
+</head>
+<body class="help">
+  <!-- The rules below are written by src/help.js. All numbers (costs, points,
+       chances, supplies…) are read live from the game's own rule constants. -->
+  <header class="help-head">
+    <a class="btn btn-tiny btn-ghost back" href="./index.html" id="backLink">← Back to the game</a>
+    <h1 class="title" id="helpTitle" data-i18n>How to play</h1>
+    <p class="subtitle" data-i18n>Settlers of the World — the complete rules</p>
+    <div class="seg help-lang" id="helpLang"></div>
+    <nav id="toc"></nav>
+  </header>
+  <main id="helpMain"></main>
+  <footer class="help-foot" data-i18n>Have fun settling the world!</footer>
+  <script type="module" src="./src/help.js"></script>
+</body>
+</html>
