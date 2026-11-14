@@ -5,9 +5,17 @@ A cozy, hand-crafted hex strategy game for 2–4 players on one screen, made wit
 sail out into the fog to discover new islands, trade with your rivals, and
 watch out for pirates and tornados.
 
-Runs in the browser, needs **no install, no build step and no internet
-connection**. Everything it uses (three.js, the font) is bundled in this
-repository.
+Runs right in your browser: no install, no account, no build step.
+
+<p align="center">
+  <a href="https://afaisst.github.io/SettlersOfTheWorld/"><img src="https://img.shields.io/badge/%E2%96%B6%20Play%20now-in%20your%20browser-ff7f66?style=for-the-badge" alt="Play now" height="44" /></a>
+</p>
+
+<p align="center">
+  <a href="https://afaisst.github.io/SettlersOfTheWorld/">afaisst.github.io/SettlersOfTheWorld</a>
+  &nbsp;·&nbsp; <a href="https://afaisst.github.io/SettlersOfTheWorld/help.html">How to play</a>
+  &nbsp;·&nbsp; <a href="#play-offline">Play offline</a>
+</p>
 
 <p align="center">
   <img src="docs/menu.png" alt="Start menu" width="49%" />
@@ -30,11 +38,17 @@ repository.
 - **Save and continue**, a minimap, a per-player camera, and victory fireworks.
 - **English and German**, with a complete rules page in both languages.
 
-## Download and play
+## Play online
 
-The game is a set of static files, but browsers refuse to run JavaScript
-modules from a page opened straight from disk (`file://`). So it has to be
-served by a small local web server. Python 3 ships one.
+Open **<https://afaisst.github.io/SettlersOfTheWorld/>** in a recent desktop browser with WebGL (Chrome, Edge,
+Firefox or Safari) and click **Play!**. Saved games are kept in your browser.
+
+## Play offline
+
+The game also runs completely offline: everything it uses (three.js, the
+font) is bundled in this repository. Browsers refuse to run JavaScript modules
+from a page opened straight from disk (`file://`), so it is started through a
+small local web server. Python 3 ships one.
 
 1. **Download** the game, either with git:
 
@@ -60,21 +74,17 @@ served by a small local web server. Python 3 ships one.
      (on Windows: `py serve.py 8000`) and open
      <http://localhost:8000> in your browser.
 
-`serve.py` is Python's built-in server with caching turned off, so a reload
-always picks up changes. Any other static file server works too, for example
-`python3 -m http.server` or `npx serve`.
+After the download, no internet connection is needed. `serve.py` is Python's
+built-in server with caching turned off, so a reload always picks up changes.
+Any other static file server works too, for example `python3 -m http.server`
+or `npx serve`.
 
-A recent desktop browser with WebGL is needed (Chrome, Edge, Firefox or Safari).
-
-### Playing online (optional)
-
-Because it is only static files, the game can also be hosted as-is, for
-example with **GitHub Pages** (*Settings ▸ Pages ▸ Deploy from branch ▸ main*).
-It will then be playable at `https://<user>.github.io/SettlersOfTheWorld/`.
+Saved games are stored per address, so a game saved online doesn't show up in
+the offline copy (and the other way round).
 
 ## How to play
 
-Click **How to play** in the start menu (or open `help.html`) for the full,
+Click **How to play** in the start menu (or open [the rules page](https://afaisst.github.io/SettlersOfTheWorld/help.html)) for the full,
 illustrated rules. The numbers on that page (costs, points, chances, supplies)
 are read straight from the game code, so they are always current.
 
